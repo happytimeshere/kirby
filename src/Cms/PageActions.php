@@ -473,6 +473,31 @@ trait PageActions
         });
     }
 
+    public function duplicate(array $params = [])
+    {
+        $content = $this->content()->toArray();
+
+        if (empty($params['title']) === false) {
+            $content['title'] = $params['title'];
+        }
+
+        $copy = Page::create([
+            'content'  => $content,
+            'isDraft'  => true,
+            'parent'   => $this->parent(),
+            'slug'     => $params['slug'] ?? ($this->slug() . '-copy'),
+            'template' => $this->intendedTemplate()->name(),
+        ]);
+
+        foreach ($this->files() as $file) {
+            F::copy($file->root(), $copy->root() . '/' . $file->filename());
+            F::copy($file->contentFile(), $copy->root() . '/' . basename($file->contentFile()));
+        }
+
+        return $copy;
+
+    }
+
     public function publish()
     {
         if ($this->isDraft() === false) {

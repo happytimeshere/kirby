@@ -143,6 +143,16 @@ export default {
   methods: {
     action(action) {
       switch (action) {
+        case "duplicate":
+          this.$api.pages
+            .duplicate(this.page.id)
+            .then(page => {
+              this.$router.push(this.$api.pages.link(page.id));
+            })
+            .catch(error => {
+              this.$store.dispatch("notification/error", error);
+            });
+          break;
         case "preview":
           this.$api.pages
             .preview(this.page.id)
