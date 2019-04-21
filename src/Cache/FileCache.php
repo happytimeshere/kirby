@@ -105,7 +105,7 @@ class FileCache extends Cache
      * @param string $key
      * @return int
      */
-    public function created(string $key): int
+    public function created(string $key)
     {
         // use the modification timestamp
         // as indicator when the cache has been created/overwritten
@@ -113,7 +113,7 @@ class FileCache extends Cache
 
         // get the file for this cache key
         $file = $this->file($key);
-        return file_exists($file) ? filemtime($this->file($key)) : 0;
+        return file_exists($file) ? filemtime($this->file($key)) : false;
     }
 
     /**
@@ -124,7 +124,13 @@ class FileCache extends Cache
      */
     public function remove(string $key): bool
     {
-        return F::remove($this->file($key));
+        $file = $this->file($key);
+
+        if (is_file($file) === true) {
+            return F::remove($file);
+        } else {
+            return false;
+        }
     }
 
     /**
