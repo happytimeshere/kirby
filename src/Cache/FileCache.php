@@ -27,9 +27,11 @@ class FileCache extends Cache
     /**
      * Sets all parameters which are needed for the file cache
      *
-     * @param array $params
+     * @param array $options 'root' (required)
+     *                       'prefix' (default: none)
+     *                       'extension' (file extension for cache files, default: none)
      */
-    public function __construct(array $params)
+    public function __construct(array $options)
     {
         $defaults = [
             'root'      => null,
@@ -37,7 +39,7 @@ class FileCache extends Cache
             'extension' => null
         ];
 
-        parent::__construct(array_merge($defaults, $params));
+        parent::__construct(array_merge($defaults, $options));
 
         // build the full root including prefix
         $this->root = $this->options['root'];
@@ -67,11 +69,12 @@ class FileCache extends Cache
     }
 
     /**
-     * Write an item to the cache for a given number of minutes.
+     * Writes an item to the cache for a given number of minutes and
+     * returns whether the operation was successful
      *
      * <code>
-     *    // Put an item in the cache for 15 minutes
-     *    Cache::set('value', 'my value', 15);
+     *   // put an item in the cache for 15 minutes
+     *   $cache->set('value', 'my value', 15);
      * </code>
      *
      * @param  string  $key
@@ -87,9 +90,10 @@ class FileCache extends Cache
     }
 
     /**
-     * Retrieve an item from the cache.
+     * Internal method to retrieve the raw cache value;
+     * needs to return a Value object or null if not found
      *
-     * @param  string  $key
+     * @param  string $key
      * @return mixed
      */
     public function retrieve(string $key): ?Value
@@ -100,10 +104,12 @@ class FileCache extends Cache
     }
 
     /**
-     * Checks when the cache has been created
+     * Checks when the cache has been created;
+     * returns the creation timestamp on success
+     * and false if the item does not exist
      *
-     * @param string $key
-     * @return int
+     * @param  string $key
+     * @return mixed
      */
     public function created(string $key)
     {
@@ -117,7 +123,8 @@ class FileCache extends Cache
     }
 
     /**
-     * Remove an item from the cache
+     * Removes an item from the cache and returns
+     * whether the operation was successful
      *
      * @param  string $key
      * @return boolean
@@ -134,7 +141,8 @@ class FileCache extends Cache
     }
 
     /**
-     * Flush the entire cache directory
+     * Flushes the entire cache and returns
+     * whether the operation was successful
      *
      * @return boolean
      */

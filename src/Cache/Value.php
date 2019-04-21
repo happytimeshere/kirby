@@ -7,7 +7,7 @@ use Throwable;
 /**
  * Cache Value
  * Stores the value, creation timestamp and expiration timestamp
- * and makes it possible to store all three with a single cache key.
+ * and makes it possible to store all three with a single cache key
  *
  * @package   Kirby Cache
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -19,7 +19,7 @@ class Value
 {
 
     /**
-     * the cached value
+     * Cached value
      * @var mixed
      */
     protected $value;
@@ -31,7 +31,7 @@ class Value
     protected $minutes;
 
     /**
-     * the creation timestamp
+     * Creation timestamp
      * @var int
      */
     protected $created;
@@ -80,7 +80,7 @@ class Value
      * Creates a value object from an array
      *
      * @param array $array
-     * @return array
+     * @return Value
      */
     public static function fromArray(array $array): self
     {
@@ -88,7 +88,8 @@ class Value
     }
 
     /**
-     * Creates a value object from a json string
+     * Creates a value object from a JSON string;
+     * returns null on error
      *
      * @param string $json
      * @return Value|null
@@ -109,7 +110,7 @@ class Value
     }
 
     /**
-     * Convert the object to a json string
+     * Converts the object to a JSON string
      *
      * @return string
      */
@@ -119,7 +120,7 @@ class Value
     }
 
     /**
-     * Convert the object to an array
+     * Converts the object to an array
      *
      * @return array
      */
@@ -133,7 +134,7 @@ class Value
     }
 
     /**
-     * Returns the value
+     * Returns the pure value
      *
      * @return mixed
      */
