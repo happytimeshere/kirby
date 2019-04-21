@@ -152,6 +152,6 @@ class FileCache extends Cache
             return true;
         }
 
-        return false;
+        return false; // @codeCoverageIgnore
     }
 }
