@@ -58,7 +58,7 @@ class ApcuCache extends Cache
      * @param  string  $key
      * @return mixed
      */
-    public function retrieve(string $key)
+    public function retrieve(string $key): ?Value
     {
         return Value::fromJson(apcu_fetch($this->key($key)));
     }
@@ -74,9 +74,9 @@ class ApcuCache extends Cache
      * @param  string  $key
      * @param  mixed   $value
      * @param  int     $minutes
-     * @return void
+     * @return boolean
      */
-    public function set(string $key, $value, int $minutes = 0)
+    public function set(string $key, $value, int $minutes = 0): bool
     {
         return apcu_store($this->key($key), $this->value($value, $minutes)->toJson(), $this->expiration($minutes));
     }
