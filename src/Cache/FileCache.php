@@ -19,8 +19,13 @@ class FileCache extends Cache
 {
 
     /**
-     * Set all parameters which are needed for the file cache
-     * see defaults for available parameters
+     * Full root including prefix
+     * @var string
+     */
+    protected $root;
+
+    /**
+     * Sets all parameters which are needed for the file cache
      *
      * @param array $params
      */
@@ -28,13 +33,20 @@ class FileCache extends Cache
     {
         $defaults = [
             'root'      => null,
+            'prefix'    => null,
             'extension' => null
         ];
 
         parent::__construct(array_merge($defaults, $params));
 
+        // build the full root including prefix
+        $this->root = $this->options['root'];
+        if (empty($this->options['prefix']) === false) {
+            $this->root .= '/' . $this->options['prefix'];
+        }
+
         // try to create the directory
-        Dir::make($this->options['root'], true);
+        Dir::make($this->root, true);
     }
 
     /**
@@ -45,9 +57,13 @@ class FileCache extends Cache
      */
     protected function file(string $key): string
     {
-        $extension = isset($this->options['extension']) ? '.' . $this->options['extension'] : '';
+        $file = $this->root . '/' . $key;
 
-        return $this->options['root'] . '/' . $this->key($key) . $extension;
+        if (isset($this->options['extension'])) {
+            return $file . '.' . $this->options['extension'];
+        } else {
+            return $file;
+        }
     }
 
     /**
@@ -78,7 +94,9 @@ class FileCache extends Cache
      */
     public function retrieve(string $key): ?Value
     {
-        return Value::fromJson(F::read($this->file($key)));
+        $file = $this->file($key);
+
+        return Value::fromJson(F::read($file));
     }
 
     /**
@@ -116,13 +134,7 @@ class FileCache extends Cache
      */
     public function flush(): bool
     {
-        $root = $this->options['root'];
-
-        if (empty($this->options['prefix']) === false) {
-            $root = $root . '/' . $this->options['prefix'];
-        }
-
-        if (Dir::remove($root) === true && Dir::make($root) === true) {
+        if (Dir::remove($this->root) === true && Dir::make($this->root) === true) {
             return true;
         }
 
