@@ -489,9 +489,11 @@ trait PageActions
             'template' => $this->intendedTemplate()->name(),
         ]);
 
-        foreach ($this->files() as $file) {
-            F::copy($file->root(), $copy->root() . '/' . $file->filename());
-            F::copy($file->contentFile(), $copy->root() . '/' . basename($file->contentFile()));
+        if (($params['files'] ?? false) === true) {
+            foreach ($this->files() as $file) {
+                F::copy($file->root(), $copy->root() . '/' . $file->filename());
+                F::copy($file->contentFile(), $copy->root() . '/' . basename($file->contentFile()));
+            }
         }
 
         return $copy;

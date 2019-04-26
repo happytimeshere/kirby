@@ -28,8 +28,9 @@ export default {
       notification: null,
       page: {
         id: null,
-        title: '',
+        files: false,
         slug: '',
+        title: '',
       }
     };
   },
@@ -48,6 +49,11 @@ export default {
           required: true,
           counter: false,
           icon: "url"
+        },
+        files: {
+          label: "Copy files",
+          type: "toggle",
+          required: true,
         }
       };
     }
@@ -74,8 +80,9 @@ export default {
     submit() {
       this.$api.pages
         .duplicate(this.page.id, {
+          files: this.page.files,
           slug: this.page.slug,
-          title: this.page.title
+          title: this.page.title,
         })
         .then(page => {
           this.success({
