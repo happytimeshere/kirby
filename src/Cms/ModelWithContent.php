@@ -242,6 +242,16 @@ abstract class ModelWithContent extends Model
     }
 
     /**
+     * Returns the lock object for this model
+     *
+     * @return ModelLock
+     */
+    public function lock(): ModelLock
+    {
+        return new ModelLock($this);
+    }
+
+    /**
      * Read the content from the content file
      *
      * @internal
