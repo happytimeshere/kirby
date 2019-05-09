@@ -473,6 +473,13 @@ trait PageActions
         });
     }
 
+    /**
+     * Duplicates the page with the given
+     * parameters (title, slug, files)
+     *
+     * @param array $params
+     * @return Page
+     */
     public function duplicate(array $params = [])
     {
         $content = $this->content()->toArray();
@@ -491,13 +498,11 @@ trait PageActions
 
         if (($params['files'] ?? false) === true) {
             foreach ($this->files() as $file) {
-                F::copy($file->root(), $copy->root() . '/' . $file->filename());
-                F::copy($file->contentFile(), $copy->root() . '/' . basename($file->contentFile()));
+                $file->copy($copy);
             }
         }
 
         return $copy;
-
     }
 
     public function publish()
