@@ -18,8 +18,20 @@ use Kirby\Toolkit\Str;
  */
 class Api extends BaseApi
 {
+    /**
+     * @var App Kirby instance
+     */
     protected $kirby;
 
+    /**
+     * Execute an API call for the given path,
+     * request method and optional request data
+     *
+     * @param string $path
+     * @param string $method
+     * @param array $requestData
+     * @return mixed
+     */
     public function call(string $path = null, string $method = 'GET', array $requestData = [])
     {
         $this->setRequestMethod($method);
@@ -36,6 +48,12 @@ class Api extends BaseApi
         return parent::call($path, $method, $requestData);
     }
 
+    /**
+     * @param mixed $model
+     * @param string $name
+     * @param string $path
+     * @return mixed
+     */
     public function fieldApi($model, string $name, string $path = null)
     {
         $form       = Form::for($model);
@@ -68,7 +86,15 @@ class Api extends BaseApi
         return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
     }
 
-    public function file(string $path = null, string $filename)
+    /**
+     * Returns the file object for the given
+     * parent path and filename
+     *
+     * @param string $path Path to file's parent model
+     * @param string $filename Filename
+     * @return Kirby\Cms\File
+     */
+    public function file(string $path = null, string $filename): File
     {
         $filename = urldecode($filename);
 
@@ -84,6 +110,12 @@ class Api extends BaseApi
         ]);
     }
 
+    /**
+     * Returns the model's object for the given path
+     *
+     * @param string $path Path to parent model
+     * @return mixed
+     */
     public function parent(string $path)
     {
         $modelType  = $path === 'site' ? 'site' : dirname($path);
@@ -113,17 +145,33 @@ class Api extends BaseApi
         ]);
     }
 
-    public function kirby()
+    /**
+     * Returns the Kirby instance
+     *
+     * @return Kirby\Cms\App
+     */
+    public function kirby(): App
     {
         return $this->kirby;
     }
 
-    public function language()
+    /**
+     * Returns the language request header
+     *
+     * @return string|null
+     */
+    public function language(): ?string
     {
         return $this->requestHeaders('x-language');
     }
 
-    public function page(string $id)
+    /**
+    * Returns the page object for the given id
+    *
+    * @param string $id Page's id
+    * @return Kirby\Cms\Page
+    */
+    public function page(string $id): Page
     {
         $id   = str_replace('+', '/', $id);
         $page = $this->kirby->page($id);
@@ -153,12 +201,25 @@ class Api extends BaseApi
         return $this;
     }
 
-    public function site()
+    /**
+     * Returns the site object
+     *
+     * @return Kirby\Cms\Site
+     */
+    public function site(): Site
     {
         return $this->kirby->site();
     }
 
-    public function user(string $id = null)
+    /**
+     * Returns the user object for the given id or
+     * returns the current authenticated user if no
+     * id is passed
+     *
+     * @param string $id User's id
+     * @return Kirby\Cms\User|null
+     */
+    public function user(string $id = null): ?User
     {
         // get the authenticated user
         if ($id === null) {
@@ -178,7 +239,12 @@ class Api extends BaseApi
         ]);
     }
 
-    public function users()
+    /**
+     * Returns the users collection
+     *
+     * @return Kirby\Cms\Users
+     */
+    public function users(): Users
     {
         return $this->kirby->users();
     }
