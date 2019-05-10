@@ -80,6 +80,10 @@ export default {
       // a negative number to a Number
       if (value !== null && value !== "" && value !== "-" && value !== "-0") {
         value = Number(value);
+
+        // format with decimals as defined by step
+        const decimals = Math.floor(this.step) === this.step ? 0 : this.step.toString().split(".")[1].length || 0;
+        value = value.toFixed(decimals);
       }
 
       this.$emit("input", value);
